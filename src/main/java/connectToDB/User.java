@@ -1,3 +1,4 @@
+package connectToDB;
 
 public class User {
     private String id;
@@ -20,5 +21,11 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public void printUserInfo(){
+        System.out.println("id : " + id);
+        System.out.println("name : "+name);
+        System.out.println("password : "+password);
     }
 }
