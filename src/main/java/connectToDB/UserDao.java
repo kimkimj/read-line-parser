@@ -1,6 +1,7 @@
 package connectToDB;
 
 import connectToDB.toClass.AwsConnectionMaker;
+import connectToDB.toClass.ConnectionMaker;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,17 +9,19 @@ import java.util.List;
 import java.util.Map;
 
 public class UserDao {
-    AwsConnectionMaker awsConnectionMaker;
+    ConnectionMaker connectionMaker;
 
-    public UserDao(AwsConnectionMaker awsConnectionMaker) {
-        this.awsConnectionMaker = awsConnectionMaker;
+    public UserDao() {
+        this.connectionMaker = new AwsConnectionMaker();
     }
+
+    public UserDao(ConnectionMaker connectionMaker){this.connectionMaker=connectionMaker;}
 
     public void add(User user) {
 
         try {
             // DB접속 (ex sql workbeanch실행)
-            Connection conn = awsConnectionMaker.makeConnection();
+            Connection conn = connectionMaker.makeConnection();
 
             // Query문 작성
             PreparedStatement pstmt = conn.prepareStatement("INSERT INTO users(id, name, password) VALUES(?,?,?);");
@@ -43,7 +46,7 @@ public class UserDao {
 
         try {
             // DB접속 (ex sql workbeanch실행)
-            Connection conn=awsConnectionMaker.makeConnection();
+            Connection conn=connectionMaker.makeConnection();
 
             // Query문 작성
             PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM users WHERE id = ?");
@@ -64,19 +67,5 @@ public class UserDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static void main(String[] args) {
-        UserDao userDao = new UserDao(new AwsConnectionMaker());
-        User lala = new User("20", "Lala", "cat");
-        userDao.add(lala);
-        User user = userDao.findById("6");
-        System.out.println(user.getName());
-
-            /*
-        List<User> users = new ArrayList<>();
-        for(User u : users){
-            u.printUserInfo();}*/
-
     }
 }
